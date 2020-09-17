@@ -20,5 +20,15 @@
   "author": {
     "name": "Yahia Zakaria"
   },
+  "samples": [
+    {
+      "displayName": "Examples",
+ 
+      "description": "Examples of Custom Post Processing Effects",
+ 
+      "path": "Samples~/Examples"
+ 
+    }
+  ],
   "hideInEditor": false
 }
