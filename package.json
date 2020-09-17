@@ -1,0 +1,24 @@
+{
+  "name": "com.yetman.render-pipelines.universal.postprocess",
+  "version": "1.0.0",
+  "displayName": "Universal RP Post-Processing Stack",
+  "description": "A post-processing stack for Universal RP",
+  "unity": "2020.1",
+  "unityRelease": "0f1",
+  "dependencies": {
+    "com.unity.render-pipelines.universal": "8.2.0",
+    "com.unity.render-pipelines.core": "8.2.0"
+  },
+  "keywords": [
+    "graphics",
+    "performance",
+    "rendering",
+    "mobile",
+    "render",
+    "pipeline"
+  ],
+  "author": {
+    "name": "Yahia Zakaria"
+  },
+  "hideInEditor": false
+}
