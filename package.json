@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "displayName": "Universal RP Post-Processing Stack",
   "description": "A post-processing stack for Universal RP",
-  "unity": "2020.1",
+  "unity": "2019.4",
   "unityRelease": "0f1",
   "dependencies": {
-    "com.unity.render-pipelines.universal": "8.2.0",
-    "com.unity.render-pipelines.core": "8.2.0"
+    "com.unity.render-pipelines.universal": "7.3.1",
+    "com.unity.render-pipelines.core": "7.3.1"
   },
   "keywords": [
     "graphics",
