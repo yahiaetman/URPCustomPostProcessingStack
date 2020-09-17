@@ -1,30 +1,13 @@
 # Customizable Post-processing Stack for Universal Render Pipeline
 
+![GitHub issues](https://img.shields.io/github/issues/yahiaetman/urp-custom-pps)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/yahiaetman/urp-custom-pps)
+![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fyahiaetman%2Furp-custom-pps)
+![Twitter Follow](https://img.shields.io/twitter/follow/yetmania?style=social)
+
 This package adds the ability to create custom post-processing effects for the universal render pipeline in a manner similar to [PPSv2](https://github.com/Unity-Technologies/PostProcessing) and [HDRP's Custom Post Process](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html). It is supposed to be a replacement for Unity's **PPSv2** till URP internally supports custom post-processing effects.
 
 **Note:** You can already add you custom effects to URP by inheriting from the `ScriptableRendererFeature` and `ScriptableRenderPass` classes. I personally find this to be a hassle and that is why I wrote this package merely for convenience. I also took it as a chance to pick up the features I like from every post-processing solution I used in Unity.
-
-## System Requirements
-
-* Unity 2020.1+
-* URP 8.2.0+
-
-## Features
-
-* Conveniently add custom post processing effects similar to [PPSv2](https://github.com/Unity-Technologies/PostProcessing) (at least more convenient that writing a renderer feature and a render pass for every effect).
-* Reorder effects from the editor similar to HDRP's [Custom Post Process Orders Settings](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html#effect-ordering).
-* Use legacy image effect shaders and unlit shader graphs if you wish (To be honest I didn't do anything, it worked out of the box so I added it to the features list).
-* Use it with Camera Stacking.
-* Use the `SceneNormals` feature (adapted from [Outline Study](https://github.com/chrisloop/outlinestudy) by [Christopher Sims](https://github.com/chrisloop)) to grab the scene normals onto a texture.
-
-Features that are almost untested:
-* It should be compatible with MultiPass XR but it is tested with Mock HMD Loader only so I can't guarantee that it works on an actual headset.
-* 2D renderers don't support renderer features yet. However, you can use camera stacking and stack a camera with a forward renderer on top of the camera with the 2D renderer. The forward renderer will apply the post processing to the result of the 2D renderer. I tried it and it worked but I didn't heavily test it yet.
-
-## Known Issues
-
-* It failed to work with Single-Pass Instanced Stereo Rendering. Actually, all of URP didn't work for me in this mode so I don't the reason behind this issue.
-* The `SceneNormals` renderer feature uses the override material in the drawing settings. This means that it does not copy the parameters of the original material such as normal maps and alpha clipping. This should be solved in URP 10.0 with the release of the `DepthNormalsPass` made for the SSAO feature.
 
 ## Screenshots
 
@@ -48,6 +31,28 @@ Other custom effects in samples but not used in screenshots:
 * Glitch.
 * Grayscale.
 * Invert.
+
+## System Requirements
+
+* Unity 2020.1+
+* URP 8.2.0+
+
+## Features
+
+* Conveniently add custom post processing effects similar to [PPSv2](https://github.com/Unity-Technologies/PostProcessing) (at least more convenient that writing a renderer feature and a render pass for every effect).
+* Reorder effects from the editor similar to HDRP's [Custom Post Process Orders Settings](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html#effect-ordering).
+* Use legacy image effect shaders and unlit shader graphs if you wish (To be honest I didn't do anything, it worked out of the box so I added it to the features list).
+* Use it with Camera Stacking.
+* Use the `SceneNormals` feature (adapted from [Outline Study](https://github.com/chrisloop/outlinestudy) by [Christopher Sims](https://github.com/chrisloop)) to grab the scene normals onto a texture.
+
+Features that are almost untested:
+* It should be compatible with MultiPass XR but it is tested with Mock HMD Loader only so I can't guarantee that it works on an actual headset.
+* 2D renderers don't support renderer features yet. However, you can use camera stacking and stack a camera with a forward renderer on top of the camera with the 2D renderer. The forward renderer will apply the post processing to the result of the 2D renderer. I tried it and it worked but I didn't heavily test it yet.
+
+## Known Issues
+
+* It failed to work with Single-Pass Instanced Stereo Rendering. Actually, all of URP didn't work for me in this mode so I don't the reason behind this issue.
+* The `SceneNormals` renderer feature uses the override material in the drawing settings. This means that it does not copy the parameters of the original material such as normal maps and alpha clipping. This should be solved in URP 10.0 with the release of the `DepthNormalsPass` made for the SSAO feature.
 
 ## How To Install
 
@@ -217,6 +222,10 @@ Other stuff we didn't explain but can be seen in the samples:
 * Create temporary render targets inside the renderer (see [StreakEffect.cs](Samples~/Examples/Scripts/PostProcessing/StreakEffect.cs)).
 * Create persistent render targets inside the renderer (see [AfterImageEffect.cs](Samples~/Examples/Scripts/PostProcessing/AfterImageEffect.cs)).
 * Use a shader graph `Unlit shader` to create a post processing effect (see [GlitchEffect.cs](Samples~/Examples/Scripts/PostProcessing/GlitchEffect.cs)).
+
+## Issues & Pull Requests
+
+Don't hesitate to [open an issue](https://github.com/yahiaetman/urp-custom-pps/issues/new/choose) if you find any bugs or have any feature requests. I can't promise to quickly reply but I will do it as soon as I can. [Pull requests](https://github.com/yahiaetman/urp-custom-pps/compare) are also very welcome. 
 
 ## License
  [MIT License](LICENSE.md)
