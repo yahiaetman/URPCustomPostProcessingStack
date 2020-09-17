@@ -1,10 +1,5 @@
 # Customizable Post-processing Stack for Universal Render Pipeline
 
-![GitHub issues](https://img.shields.io/github/issues/yahiaetman/urp-custom-pps)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/yahiaetman/urp-custom-pps)
-![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fyahiaetman%2Furp-custom-pps)
-![Twitter Follow](https://img.shields.io/twitter/follow/yetmania?style=social)
-
 This package adds the ability to create custom post-processing effects for the universal render pipeline in a manner similar to [PPSv2](https://github.com/Unity-Technologies/PostProcessing) and [HDRP's Custom Post Process](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html). It is supposed to be a replacement for Unity's **PPSv2** till URP internally supports custom post-processing effects.
 
 **Note:** You can already add you custom effects to URP by inheriting from the `ScriptableRendererFeature` and `ScriptableRenderPass` classes. I personally find this to be a hassle and that is why I wrote this package merely for convenience. I also took it as a chance to pick up the features I like from every post-processing solution I used in Unity.
@@ -226,6 +221,11 @@ Other stuff we didn't explain but can be seen in the samples:
 ## Issues & Pull Requests
 
 Don't hesitate to [open an issue](https://github.com/yahiaetman/urp-custom-pps/issues/new/choose) if you find any bugs or have any feature requests. I can't promise to quickly reply but I will do it as soon as I can. [Pull requests](https://github.com/yahiaetman/urp-custom-pps/compare) are also very welcome. 
+
+## Social
+
+![Twitter URL](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2Fyahiaetman%2Furp-custom-pps)
+![Twitter Follow](https://img.shields.io/twitter/follow/yetmania?style=social)
 
 ## License
  [MIT License](LICENSE.md)
