@@ -20,9 +20,15 @@ The screenshots uses the following builtin effects:
 
 They also contain the following custom effects:
 * Edge Detection (Adapted from [this tutorial](https://halisavakis.com/my-take-on-shaders-edge-detection-image-effect/) by [Harry Alisavakis](https://halisavakis.com/)).
-* Gradient Fog (A simplified version of [Multi-Colored Fog](https://halisavakis.com/my-take-on-shaders-firewatch-multi-colored-fog/) by [Harry Alisavakis](https://halisavakis.com/)).
+* Gradient Fog.
 * Chromatic Splitting.
 * Streak (Adapted from [Kino](https://github.com/keijiro/Kino) by [Keijiro Takahashi](https://github.com/keijiro)).
+
+Other custom effects in samples but not used in screenshots:
+* After Image.
+* Glitch.
+* GrayScale.
+* Invert.
 
 ## How To Install
 
