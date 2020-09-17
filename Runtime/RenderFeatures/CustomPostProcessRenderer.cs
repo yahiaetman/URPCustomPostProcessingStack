@@ -108,6 +108,7 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
         }
 
         public static CustomPostProcessAttribute GetAttribute(Type type){
+            if(type == null) return null;
             var atttributes = type.GetCustomAttributes(typeof(CustomPostProcessAttribute), false);
             return (atttributes.Length != 0) ? (atttributes[0] as CustomPostProcessAttribute) : null;
         }

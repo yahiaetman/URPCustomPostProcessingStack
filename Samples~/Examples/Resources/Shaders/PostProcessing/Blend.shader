@@ -1,12 +1,12 @@
-﻿Shader "Hidden/Blend"
+﻿Shader "Hidden/Yetman/PostProcess/Blend"
 {
     HLSLINCLUDE
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
 
     TEXTURE2D_X(_MainTex);
     TEXTURE2D_X(_SecondaryTex);
 
-    float3 _blend;
+    float3 _Blend;
 
     float4 BlendFragmentProgram(PostProcessVaryings input) : SV_Target
     {
@@ -16,7 +16,7 @@
         float3 mainColor = LOAD_TEXTURE2D_X(_MainTex, positionSS).rgb;
         float3 secondaryColor = LOAD_TEXTURE2D_X(_SecondaryTex, positionSS).rgb;
         // blend the main and secondary color
-        float3 color = lerp(mainColor, secondaryColor, _blend);
+        float3 color = lerp(mainColor, secondaryColor, _Blend);
         return float4(color, 1);
     }
     ENDHLSL

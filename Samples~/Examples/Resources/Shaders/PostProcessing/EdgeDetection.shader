@@ -1,22 +1,22 @@
-﻿Shader "Hidden/EdgeDetection"
+﻿Shader "Hidden/Yetman/PostProcess/EdgeDetection"
 {
     HLSLINCLUDE
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
     // In URP 10, this should be replaced by the same file from URP's ShaderLibrary
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/DeclareNormalsTexture.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/DeclareNormalsTexture.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
     TEXTURE2D_X(_MainTex);
     float4 _MainTex_TexelSize;
 
     // The blending factor for the edges with the original color
-    float _intensity;
+    float _Intensity;
     // The threshold ranges for edge detection (xy used for normals, zw used for depth)
-    float4 _threshold;
+    float4 _Threshold;
     // The thickness of the edge (determines how far the neighbour samples spread around the center sample)
-    float _thickness;
+    float _Thickness;
     // The color of the edge
-    float3 _color;
+    float3 _Color;
 
     // Curtom Scene normal and depth sampling function to read from a custom texture and sampler
     float3 SampleSceneNormals(float2 uv, TEXTURE2D_X_FLOAT(_Texture), SAMPLER(sampler_Texture))
@@ -79,15 +79,15 @@
         float4 color = LOAD_TEXTURE2D_X(_MainTex, uv * _ScreenParams.xy);
         
         float4 center = SampleSceneDepthNormal(uv);
-        float4 neighborhood = SampleNeighborhood(uv,  _thickness);
+        float4 neighborhood = SampleNeighborhood(uv,  _Thickness);
         // Normal similarity is calculated using a dot product
-        float normalSame = smoothstep(_threshold.x, _threshold.y, dot(center.xyz, neighborhood.xyz));
+        float normalSame = smoothstep(_Threshold.x, _Threshold.y, dot(center.xyz, neighborhood.xyz));
         // Depth similarity is calculated using absolute difference
-        float depthSame = smoothstep(_threshold.w, _threshold.z, abs(center.w - neighborhood.w));
+        float depthSame = smoothstep(_Threshold.w, _Threshold.z, abs(center.w - neighborhood.w));
         // Combine normal and depth sameness to get edge factor
         float edge = 1 - normalSame * depthSame;
 
-        color.rgb = lerp(color.rgb, _color, edge * _intensity);
+        color.rgb = lerp(color.rgb, _Color, edge * _Intensity);
         return color;
     }
     ENDHLSL

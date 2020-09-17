@@ -1,18 +1,18 @@
-﻿Shader "Hidden/GradientFog"
+﻿Shader "Hidden/Yetman/PostProcess/GradientFog"
 {
     HLSLINCLUDE
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
     TEXTURE2D_X(_MainTex);
 
-    float _intensity;
-    float _exponent;
+    float _Intensity;
+    float _Exponent;
 
     // The near and far color distance
-    float2 _colorRange;
-    float3 _nearFogColor;
-    float3 _farFogColor;
+    float2 _ColorRange;
+    float3 _NearFogColor;
+    float3 _FarFogColor;
 
     // The value from the depth buffer must be remapped from [0,1]
     // to [-1,1] before computing view space position 
@@ -36,12 +36,12 @@
         float3 viewPos = ComputeViewSpacePosition(uv, deviceDepth, unity_CameraInvProjection);
         float distance = length(viewPos);
 
-        float fogFactor = 1.0 - exp(- _exponent * distance); // exponential fog
-        float3 fogColor = lerp(_nearFogColor, _farFogColor, smoothstep(_colorRange.x, _colorRange.y, distance));
+        float fogFactor = 1.0 - exp(- _Exponent * distance); // exponential fog
+        float3 fogColor = lerp(_NearFogColor, _FarFogColor, smoothstep(_ColorRange.x, _ColorRange.y, distance));
 
         float4 color = LOAD_TEXTURE2D_X(_MainTex, positionSS);
         
-        color.rgb = lerp(color.rgb, fogColor, _intensity * fogFactor);
+        color.rgb = lerp(color.rgb, fogColor, _Intensity * fogFactor);
         return color;
     }
     ENDHLSL

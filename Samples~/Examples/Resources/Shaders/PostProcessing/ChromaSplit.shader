@@ -1,12 +1,12 @@
-﻿Shader "Hidden/ChromaSplit"
+﻿Shader "Hidden/Yetman/PostProcess/ChromaSplit"
 {
     HLSLINCLUDE
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
 
     TEXTURE2D_X(_MainTex);
 
     // The split amount
-    uint2 _split;
+    uint2 _Split;
 
     float4 ChromaSplitFragmentProgram(PostProcessVaryings input) : SV_Target
     {
@@ -17,8 +17,8 @@
         float4 color = LOAD_TEXTURE2D_X(_MainTex, positionSS);
         
         // Read read and blue from the neighbouring pixels at the given split offset
-        color.r = LOAD_TEXTURE2D_X(_MainTex, positionSS - _split).r;
-        color.b = LOAD_TEXTURE2D_X(_MainTex, positionSS + _split).b;
+        color.r = LOAD_TEXTURE2D_X(_MainTex, positionSS - _Split).r;
+        color.b = LOAD_TEXTURE2D_X(_MainTex, positionSS + _Split).b;
         
         return color;
     }

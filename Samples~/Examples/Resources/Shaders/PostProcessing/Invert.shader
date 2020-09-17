@@ -1,11 +1,11 @@
-﻿Shader "Hidden/Invert"
+﻿Shader "Hidden/Yetman/PostProcess/Invert"
 {
     HLSLINCLUDE
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
 
     TEXTURE2D_X(_MainTex);
 
-    float _blend;
+    float _Blend;
 
     float4 InvertFragmentProgram(PostProcessVaryings input) : SV_Target
     {
@@ -13,7 +13,7 @@
         float2 uv = UnityStereoTransformScreenSpaceTex(input.texcoord);
         float4 color = LOAD_TEXTURE2D_X(_MainTex, uv * _ScreenParams.xy);
         // just invert the colors and blend with the original color
-        color.rgb = lerp(color.rgb, 1.0 - color.rgb, _blend);
+        color.rgb = lerp(color.rgb, 1.0 - color.rgb, _Blend);
         return color;
     }
     ENDHLSL

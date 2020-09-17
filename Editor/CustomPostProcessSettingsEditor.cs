@@ -35,7 +35,7 @@ namespace UnityEditor.Rendering.Universal.PostProcessing {
         /// <param name="type"></param>
         /// <returns></returns>
         private string GetName(Type type){
-            return CustomPostProcessAttribute.GetAttribute(type)?.Name ?? type.Name;
+            return CustomPostProcessAttribute.GetAttribute(type)?.Name ?? type?.Name;
         }
 
         // This code is mostly copied from Unity's HDRP repository

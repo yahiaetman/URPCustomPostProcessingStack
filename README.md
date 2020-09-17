@@ -32,7 +32,9 @@ Other custom effects in samples but not used in screenshots:
 
 ## How To Install
 
-**TODO**
+Follow the instructions from the Unity manual on [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html) and insert the url: https://github.com/yahiaetman/urp-custom-pps.git then wait for the package to be downloaded and installed.
+
+The package contains 8 example effect which are included as a sample. Samples can be imported from the package page in the package manager.
 
 ## Tutorial
 

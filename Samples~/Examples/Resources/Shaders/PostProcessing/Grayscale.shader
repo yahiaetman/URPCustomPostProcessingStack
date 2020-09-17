@@ -1,13 +1,13 @@
-﻿Shader "Hidden/Grayscale"
+﻿Shader "Hidden/Yetman/PostProcess/Grayscale"
 {
     HLSLINCLUDE
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
     // This file contains the "Luminance" which we use to get the grayscale value
     #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
     TEXTURE2D_X(_MainTex);
 
-    float _blend;
+    float _Blend;
 
     float4 GrayscaleFragmentProgram (PostProcessVaryings input) : SV_Target
     {
@@ -17,7 +17,7 @@
         float4 color = LOAD_TEXTURE2D_X(_MainTex, uv * _ScreenParams.xy);
         
         // Blend between the original and the grayscale color
-        color.rgb = lerp(color.rgb, Luminance(color.rgb).xxx, _blend);
+        color.rgb = lerp(color.rgb, Luminance(color.rgb).xxx, _Blend);
         
         return color;
     }

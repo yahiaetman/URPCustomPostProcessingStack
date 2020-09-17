@@ -1,14 +1,14 @@
-﻿Shader "Hidden/GrayAndInvert"
+﻿Shader "Hidden/Yetman/PostProcess/GrayAndInvert"
 {
     HLSLINCLUDE
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
     // This file contains the "Luminance" which we use to get the grayscale value
     #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
     TEXTURE2D_X(_MainTex);
 
-    float _grayBlend;
-    float _invertBlend;
+    float _GrayBlend;
+    float _InvertBlend;
 
     float4 GrayAndInverFragmentProgram(PostProcessVaryings input) : SV_Target
     {
@@ -19,12 +19,12 @@
         
         #if GRAYSCALE_ON
         // Blend between the original and the grayscale color
-        color.rgb = lerp(color.rgb, Luminance(color.rgb).xxx, _grayBlend);
+        color.rgb = lerp(color.rgb, Luminance(color.rgb).xxx, _GrayBlend);
         #endif
 
         #if INVERT_ON
         // just invert the colors and blend with the original color
-        color.rgb = lerp(color.rgb, 1.0 - color.rgb, _invertBlend);
+        color.rgb = lerp(color.rgb, 1.0 - color.rgb, _InvertBlend);
         #endif
         
         return color;

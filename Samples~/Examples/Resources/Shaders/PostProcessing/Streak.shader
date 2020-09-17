@@ -1,9 +1,9 @@
 // Credits goes to Keijiro Takahashi for their repo: https://github.com/keijiro/Kino
-Shader "Hidden/Streak"
+Shader "Hidden/Yetman/PostProcess/Streak"
 {
     HLSLINCLUDE
 
-    #include "Packages/com.yetman.render-pipelines.universal.postprocessing/ShaderLibrary/Core.hlsl"
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
     #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Color.hlsl"
 
 
