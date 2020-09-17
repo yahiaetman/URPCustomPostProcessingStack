@@ -1,11 +1,28 @@
-# Post-processing Stack for Universal Render Pipeline
+# Customizable Post-processing Stack for Universal Render Pipeline
 
 This package adds the ability to create custom post-processing effects for the universal render pipeline in a manner similar to [PPSv2](https://github.com/Unity-Technologies/PostProcessing) and [HDRP's Custom Post Process](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html). It is supposed to be a replacement for Unity's **PPSv2** till URP internally supports custom post-processing effect.
+
+**Note:** You can add you custom effects in URP by inheriting from the `ScriptableRendererFeature` and `ScriptableRenderPass` classes. I personally find this to be hassle and that is why I wrote this package merely for convenience. I also took it as a chance to pick up the features I like from every post-processing solution I used for unity.
 
 ## System Requirements
 
 * Unity 2020.1+
 * URP 8.2.0+
+
+## Features
+
+* Conveniently add custom post processing effects similar to [PPSv2](https://github.com/Unity-Technologies/PostProcessing) (at least more convenient that writing a renderer feature and a render pass).
+* Reorder effects from the editor similar to HDRP's [Custom Post Process Orders Settings](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html#effect-ordering).
+* Use legacy image effect shaders and unlit shader graphs if you wish (To be honest I didn't do anything, it worked out of the box so I added it to features list).
+* Use `SceneNormals` feature (adapted from [Outline Study](https://github.com/chrisloop/outlinestudy) by [Christopher Sims](https://github.com/chrisloop)) to grab the scene normals on a texture.
+
+Features that are almost untested:
+* Compatible with MultiPass XR but it is tested with Mock HMD Loader only so I can't guarantee that it works on an actual headset.
+
+## Known Issues
+
+* It failed to work with Single-Pass Instanced Stereo Rendering. Actually, URP didn't work for me in this mode so I don't the reason behind this issue.
+* The `SceneNormals` renderer feature uses the override material in the draw settings. This means that it doesn't not copy the parameters of the original material such as normal maps and alpha clipping. This should be solved in URP 10.0 with the release of the `DepthNormalsPass` made for the SSAO feature.
 
 ## Screenshots
 
@@ -18,7 +35,7 @@ The screenshots uses the following builtin effects:
 * Film Grain
 * Split Toning
 
-They also contain the following custom effects:
+For the custom effects, they contain the following:
 * Edge Detection (Adapted from [this tutorial](https://halisavakis.com/my-take-on-shaders-edge-detection-image-effect/) by [Harry Alisavakis](https://halisavakis.com/)).
 * Gradient Fog.
 * Chromatic Splitting.
@@ -27,7 +44,7 @@ They also contain the following custom effects:
 Other custom effects in samples but not used in screenshots:
 * After Image.
 * Glitch.
-* GrayScale.
+* Grayscale.
 * Invert.
 
 ## How To Install
@@ -189,6 +206,7 @@ Other stuff we didn't explain but can be seen in the samples:
 * Merge effects and read from more than one volume component (see [GrayAndInvertEffect.cs](Samples~/Examples/Scripts/PostProcessing/GrayAndInvertEffect.cs) and [GrayAndInvert.shader](Samples~/Examples/Resources/Shaders/PostProcessing/GrayAndInvert.shader)). 
 * Create temporary render targets inside the renderer (see [StreakEffect.cs](Samples~/Examples/Scripts/PostProcessing/StreakEffect.cs)).
 * Create persistent render targets inside the renderer (see [AfterImageEffect.cs](Samples~/Examples/Scripts/PostProcessing/AfterImageEffect.cs)).
+* Use a shader graph `Unlit shader` to create a post processing effect (see [GlitchEffect.cs](Samples~/Examples/Scripts/PostProcessing/GlitchEffect.cs)).
 
 ## License
  [MIT License](LICENSE.md)
