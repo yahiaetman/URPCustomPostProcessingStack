@@ -4,8 +4,8 @@ This package adds the ability to create custom post-processing effects for the u
 
 ## System Requirements
 
-* Unity 2019.4+
-* URP 7.3.1+
+* Unity 2020.1+
+* URP 8.2.0+
 
 ## Screenshots
 
