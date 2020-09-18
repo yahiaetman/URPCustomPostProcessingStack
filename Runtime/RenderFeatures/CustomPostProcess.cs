@@ -86,27 +86,38 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
             // This is copied from the forward renderer
             m_AfterPostProcessColor.Init("_AfterPostProcessTexture");
             // Create the three render passes and send the custom post-processing renderer classes to each
-            m_AfterOpaqueAndSky = new CustomPostProcessRenderPass(CustomPostProcessInjectPoint.AfterOpaqueAndSky, convertStringsToTypes(settings.renderersAfterOpaqueAndSky));
-            m_BeforePostProcess = new CustomPostProcessRenderPass(CustomPostProcessInjectPoint.BeforePostProcess, convertStringsToTypes(settings.renderersBeforePostProcess));
-            m_AfterPostProcess = new CustomPostProcessRenderPass(CustomPostProcessInjectPoint.AfterPostProcess, convertStringsToTypes(settings.renderersAfterPostProcess));
+            Dictionary<string, CustomPostProcessRenderer> shared = new Dictionary<string, CustomPostProcessRenderer>();
+            m_AfterOpaqueAndSky = new CustomPostProcessRenderPass(CustomPostProcessInjectionPoint.AfterOpaqueAndSky, InstantiateRenderers(settings.renderersAfterOpaqueAndSky, shared));
+            m_BeforePostProcess = new CustomPostProcessRenderPass(CustomPostProcessInjectionPoint.BeforePostProcess, InstantiateRenderers(settings.renderersBeforePostProcess, shared));
+            m_AfterPostProcess = new CustomPostProcessRenderPass(CustomPostProcessInjectionPoint.AfterPostProcess, InstantiateRenderers(settings.renderersAfterPostProcess, shared));
         }
-
+        
         /// <summary>
-        /// Converts the class name (AssemblyQualifiedName) to type. Filters out types that don't exist or don't inherit <c>CustomPostProcessRenderer</c>.
+        /// Converts the class name (AssemblyQualifiedName) to an instance. Filters out types that don't exist or don't match the requirements.
         /// </summary>
         /// <param name="names">The list of assembly-qualified class names</param>
-        /// <returns></returns>
-        private List<Type> convertStringsToTypes(List<String> names){
-            var types = new List<Type>(names.Count);
-            foreach(var component in names){
-                var type = Type.GetType(component);
-                if(type != null && type.IsSubclassOf(typeof(CustomPostProcessRenderer))){
-                    types.Add(type);
+        /// <param name="shared">Dictionary of shared instances keyed by class name</param>
+        /// <returns>List of renderers</returns>
+        private List<CustomPostProcessRenderer> InstantiateRenderers(List<String> names, Dictionary<string, CustomPostProcessRenderer> shared){
+            var renderers = new List<CustomPostProcessRenderer>(names.Count);
+            foreach(var name in names){
+                if(shared.TryGetValue(name, out var renderer)){
+                    renderers.Add(renderer);
+                } else {
+                    var type = Type.GetType(name);
+                    if(type == null || !type.IsSubclassOf(typeof(CustomPostProcessRenderer))) continue;
+                    var attribute = CustomPostProcessAttribute.GetAttribute(type);
+                    if(attribute == null) continue;
+
+                    renderer = Activator.CreateInstance(type) as CustomPostProcessRenderer;
+                    renderers.Add(renderer);
+                    
+                    if(attribute.ShareInstance)
+                        shared.Add(name, renderer);
                 }
             }
-            return types;
+            return renderers;
         }
-
     }
 
     /// <summary>
@@ -114,6 +125,11 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
     /// </summary>
     public class CustomPostProcessRenderPass : ScriptableRenderPass
     {
+        /// <summary>
+        /// The injection point of the pass
+        /// </summary>
+        private CustomPostProcessInjectionPoint injectionPoint;
+
         /// <summary>
         /// The pass name which will be displayed on the command buffer in the frame debugger.
         /// </summary>
@@ -127,7 +143,7 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
         /// <summary>
         /// List of all post process renderer instances that are active for the current camera.
         /// </summary>
-        private List<CustomPostProcessRenderer> m_ActivePostProcessRenderers;
+        private List<int> m_ActivePostProcessRenderers;
 
         /// <summary>
         /// Array of 2 intermediate render targets used to hold intermediate results.
@@ -167,35 +183,30 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
         /// <summary>
         /// Construct the custom post-processing render pass
         /// </summary>
-        /// <param name="injectPoint">The post processing injection point</param>
+        /// <param name="injectionPoint">The post processing injection point</param>
         /// <param name="classes">The list of classes for the renderers to be executed by this render pass</param>
-        public CustomPostProcessRenderPass(CustomPostProcessInjectPoint injectPoint, List<Type> classes){
-            this.m_ProfilingSamplers = new List<ProfilingSampler>(classes.Count);
-            this.m_PostProcessRenderers = new List<CustomPostProcessRenderer>(classes.Count);
-            foreach(var type in classes){
+        public CustomPostProcessRenderPass(CustomPostProcessInjectionPoint injectionPoint, List<CustomPostProcessRenderer> renderers){
+            this.injectionPoint = injectionPoint;
+            this.m_ProfilingSamplers = new List<ProfilingSampler>(renderers.Count);
+            this.m_PostProcessRenderers = renderers;
+            foreach(var renderer in renderers){
                 // Get renderer name and add it to the names list
-                var attribute = CustomPostProcessAttribute.GetAttribute(type);
+                var attribute = CustomPostProcessAttribute.GetAttribute(renderer.GetType());
                 m_ProfilingSamplers.Add(new ProfilingSampler(attribute?.Name));
-                // Create an instance from the class type then add to renderers list
-                var postProcessRenderer = Activator.CreateInstance(type) as CustomPostProcessRenderer;
-                m_PostProcessRenderers.Add(postProcessRenderer);
-                // Call setup to prepare the renderer for execution
-                // TODO: May be it is better to call this only before the first render call
-                postProcessRenderer.Setup();
             }
             // Pre-allocate a list for active renderers
-            this.m_ActivePostProcessRenderers = new List<CustomPostProcessRenderer>(classes.Count);
+            this.m_ActivePostProcessRenderers = new List<int>(renderers.Count);
             // Set render pass event and name based on the injection point.
-            switch(injectPoint){
-                case CustomPostProcessInjectPoint.AfterOpaqueAndSky: 
+            switch(injectionPoint){
+                case CustomPostProcessInjectionPoint.AfterOpaqueAndSky: 
                     renderPassEvent = RenderPassEvent.AfterRenderingSkybox; 
                     m_PassName = "Custom PostProcess after Opaque & Sky";
                     break;
-                case CustomPostProcessInjectPoint.BeforePostProcess: 
+                case CustomPostProcessInjectionPoint.BeforePostProcess: 
                     renderPassEvent = RenderPassEvent.BeforeRenderingPostProcessing;
                     m_PassName = "Custom PostProcess before PostProcess";
                     break;
-                case CustomPostProcessInjectPoint.AfterPostProcess:
+                case CustomPostProcessInjectionPoint.AfterPostProcess:
                     // NOTE: This was initially "AfterRenderingPostProcessing" but it made the builtin post-processing to blit directly to the camera target.
                     renderPassEvent = RenderPassEvent.AfterRendering;
                     m_PassName = "Custom PostProcess after PostProcess";
@@ -258,12 +269,13 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
 
             // Collect the active renderers
             m_ActivePostProcessRenderers.Clear();
-            foreach(var ppRenderer in m_PostProcessRenderers){
+            for(int index = 0; index < m_PostProcessRenderers.Count; index++){
+                var ppRenderer = m_PostProcessRenderers[index];
                 // Skips current renderer if "visibleInSceneView" = false and the current camera is a scene view camera. 
                 if(isSceneView && !ppRenderer.visibleInSceneView) continue;
                 // Setup the camera for the renderer and if it will render anything, add to active renderers
-                if(ppRenderer.SetupCamera(ref renderingData)){
-                    m_ActivePostProcessRenderers.Add(ppRenderer);
+                if(ppRenderer.Setup(ref renderingData, injectionPoint)){
+                    m_ActivePostProcessRenderers.Add(index);
                 }
             }
 
@@ -287,6 +299,10 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
             
             context.ExecuteCommandBuffer(cmd);
             cmd.Clear();
+
+            int width = m_IntermediateDesc.width;
+            int height = m_IntermediateDesc.height;
+            cmd.SetGlobalVector("_ScreenSize", new Vector4(width, height, 1.0f/width, 1.0f/height));
             
             // The variable will be true if the last renderer couldn't blit to destination.
             // This happens if there is only 1 renderer and the source is the same as the destination.
@@ -295,7 +311,8 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
             int intermediateIndex = 0;
 
             for(int index = 0; index < m_ActivePostProcessRenderers.Count; ++index){
-                var ppRenderer = m_ActivePostProcessRenderers[index];
+                var rendererIndex = m_ActivePostProcessRenderers[index];
+                var renderer = m_PostProcessRenderers[rendererIndex];
                 
                 RenderTargetIdentifier source, destination;
                 if(index == 0){
@@ -330,10 +347,13 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
                     }
                 }
 
-                using(new ProfilingScope(cmd, m_ProfilingSamplers[index]))
+                using(new ProfilingScope(cmd, m_ProfilingSamplers[rendererIndex]))
                 {
+                    // If the renderer was not already initialized, initialize it.
+                    if(!renderer.Initialized)
+                        renderer.InitializeInternal();
                     // Execute the renderer.
-                    ppRenderer.Render(cmd, ref renderingData, source, destination);
+                    renderer.Render(cmd, source, destination, ref renderingData, injectionPoint);
                 }
                 
             }

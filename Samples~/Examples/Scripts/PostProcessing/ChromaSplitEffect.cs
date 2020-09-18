@@ -18,7 +18,7 @@ namespace Yetman.PostProcess {
     }
 
     // Define the renderer for the custom post processing effect
-    [CustomPostProcess("Chromatic Split", CustomPostProcessInjectPoint.AfterPostProcess)]
+    [CustomPostProcess("Chromatic Split", CustomPostProcessInjectionPoint.AfterPostProcess)]
     public class ChromaSplitEffectRenderer : CustomPostProcessRenderer
     {
         // A variable to hold a reference to the corresponding volume component (you can define as many as you like)
@@ -36,14 +36,15 @@ namespace Yetman.PostProcess {
         // By default, the effect is visible in the scene view, but we can change that here.
         public override bool visibleInSceneView => true;
 
-        // Setup is called once so we use it to create our material
-        public override void Setup()
+        // Initialized is called only once before the first render call
+        // so we use it to create our material
+        public override void Initialize()
         {
             m_Material = CoreUtils.CreateEngineMaterial("Hidden/Yetman/PostProcess/ChromaSplit");
         }
 
-        // Called once before rendering. Return true if the effect should be rendered for this camera.
-        public override bool SetupCamera(ref RenderingData renderingData)
+        // Called for each camera/injection point pair on each frame. Return true if the effect should be rendered for this camera.
+        public override bool Setup(ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             // Get the current volume stack
             var stack = VolumeManager.instance.stack;
@@ -54,7 +55,7 @@ namespace Yetman.PostProcess {
         }
 
         // The actual rendering execution is done here
-        public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RenderTargetIdentifier source, RenderTargetIdentifier destination)
+        public override void Render(CommandBuffer cmd, RenderTargetIdentifier source, RenderTargetIdentifier destination, ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             // set material properties
             if(m_Material != null){

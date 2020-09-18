@@ -21,7 +21,7 @@ namespace Yetman.PostProcess {
     }
 
     // Define the renderer for the custom post processing effect
-    [CustomPostProcess("After Image", CustomPostProcessInjectPoint.AfterPostProcess)]
+    [CustomPostProcess("After Image", CustomPostProcessInjectionPoint.AfterPostProcess)]
     public class AfterImageEffectRenderer : CustomPostProcessRenderer
     {
         // A variable to hold a reference to the corresponding volume component (you can define as many as you like)
@@ -60,16 +60,21 @@ namespace Yetman.PostProcess {
         // I chose false here because who would want an after-image effect while editing.
         public override bool visibleInSceneView => false;
 
-        // Setup is called once so we use it to create our material
-        public override void Setup()
+        // Use the constructor for initialization work that needs to be done before anything else
+        public AfterImageEffectRenderer(){
+            _histories = new Dictionary<int, CameraHistory>();
+        }
+
+        // Initialized is called only once before the first render call
+        // so we use it to create our material and define intermediate RT name
+        public override void Initialize()
         {
             m_Material = CoreUtils.CreateEngineMaterial("Hidden/Yetman/PostProcess/Blend");
-            _histories = new Dictionary<int, CameraHistory>();
             _intermediate.Init("_BlendDestination");
         }
 
-        // Called once before rendering. Return true if the effect should be rendered for this camera.
-        public override bool SetupCamera(ref RenderingData renderingData)
+        // Called for each camera/injection point pair on each frame. Return true if the effect should be rendered for this camera.
+        public override bool Setup(ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             // Get the current volume stack
             var stack = VolumeManager.instance.stack;
@@ -89,7 +94,7 @@ namespace Yetman.PostProcess {
         }
 
         // The actual rendering execution is done here
-        public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RenderTargetIdentifier source, RenderTargetIdentifier destination)
+        public override void Render(CommandBuffer cmd, RenderTargetIdentifier source, RenderTargetIdentifier destination, ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             // Get camera instance id
             int id = renderingData.cameraData.camera.GetInstanceID();

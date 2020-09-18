@@ -20,7 +20,7 @@ namespace Yetman.PostProcess {
     }
 
     // Define the renderer for the custom post processing effect
-    [CustomPostProcess("Glitch", CustomPostProcessInjectPoint.AfterPostProcess)]
+    [CustomPostProcess("Glitch", CustomPostProcessInjectionPoint.AfterPostProcess)]
     public class GlitchEffectRenderer : CustomPostProcessRenderer
     {
         // A variable to hold a reference to the corresponding volume component (you can define as many as you like)
@@ -42,16 +42,17 @@ namespace Yetman.PostProcess {
         // you can define local variables if you wish (Note that they will be shared between cameras)
         private float timeElapsed, previousFrameTime;
 
-        // Setup is called once so we use it to create our material and initialize variables
-        public override void Setup()
+        // Initialized is called only once before the first render call
+        // so we use it to create our material and initialize variables
+        public override void Initialize()
         {
             m_Material = CoreUtils.CreateEngineMaterial("Shader Graphs/Glitch");
             timeElapsed = 0;
             previousFrameTime = Time.time;
         }
 
-        // Called once before rendering. Return true if the effect should be rendered for this camera.
-        public override bool SetupCamera(ref RenderingData renderingData)
+        // Called for each camera/injection point pair on each frame. Return true if the effect should be rendered for this camera.
+        public override bool Setup(ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             // Get the current volume stack
             var stack = VolumeManager.instance.stack;
@@ -62,7 +63,7 @@ namespace Yetman.PostProcess {
         }
 
         // The actual rendering execution is done here
-        public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RenderTargetIdentifier source, RenderTargetIdentifier destination)
+        public override void Render(CommandBuffer cmd, RenderTargetIdentifier source, RenderTargetIdentifier destination, ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             // Update local variables
             // Note: we calculate our delta time since this function can be called more than once in a single frame.

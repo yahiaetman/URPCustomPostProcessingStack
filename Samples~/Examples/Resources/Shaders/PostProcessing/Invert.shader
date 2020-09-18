@@ -11,7 +11,7 @@
     {
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
         float2 uv = UnityStereoTransformScreenSpaceTex(input.texcoord);
-        float4 color = LOAD_TEXTURE2D_X(_MainTex, uv * _ScreenParams.xy);
+        float4 color = LOAD_TEXTURE2D_X(_MainTex, uv * _ScreenSize.xy);
         // just invert the colors and blend with the original color
         color.rgb = lerp(color.rgb, 1.0 - color.rgb, _Blend);
         return color;

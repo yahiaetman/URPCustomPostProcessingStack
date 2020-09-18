@@ -8,4 +8,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added the main functionality for custom post-processing as renderer future for URP.
 - Added a scene normal texture renderer feature as a temporary workaround till URP 10 is out.
-- Added a shader include file to facilitate creating post process shaders.    
+- Added a shader include file to facilitate creating post process shaders. 

@@ -25,7 +25,7 @@ namespace Yetman.PostProcess {
     }
 
     // Define the renderer for the custom post processing effect
-    [CustomPostProcess("Streak", CustomPostProcessInjectPoint.BeforePostProcess)]
+    [CustomPostProcess("Streak", CustomPostProcessInjectionPoint.BeforePostProcess)]
     public class StreakEffectRenderer : CustomPostProcessRenderer
     {
         // A variable to hold a reference to the corresponding volume component (you can define as many as you like)
@@ -54,8 +54,9 @@ namespace Yetman.PostProcess {
         // By default, the effect is visible in the scene view, but we can change that here.
         public override bool visibleInSceneView => true;
 
-        // Setup is called once so we use it to create our material
-        public override void Setup()
+        // Initialized is called only once before the first render call
+        // so we use it to create our material
+        public override void Initialize()
         {
             m_Material = CoreUtils.CreateEngineMaterial("Hidden/Yetman/PostProcess/Streak");
             // Define names for each RT in the streak pyramid
@@ -68,8 +69,8 @@ namespace Yetman.PostProcess {
             }
         }
 
-        // Called once before rendering. Return true if the effect should be rendered for this camera.
-        public override bool SetupCamera(ref RenderingData renderingData)
+        // Called for each camera/injection point pair on each frame. Return true if the effect should be rendered for this camera.
+        public override bool Setup(ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             // Get the current volume stack
             var stack = VolumeManager.instance.stack;
@@ -121,7 +122,7 @@ namespace Yetman.PostProcess {
         }
 
         // The actual rendering execution is done here
-        public override void Render(CommandBuffer cmd, ref RenderingData renderingData, RenderTargetIdentifier source, RenderTargetIdentifier destination)
+        public override void Render(CommandBuffer cmd, RenderTargetIdentifier source, RenderTargetIdentifier destination, ref RenderingData renderingData, CustomPostProcessInjectionPoint injectionPoint)
         {
             int mips = AllocatePyramid(cmd, ref renderingData);
             // set material properties

@@ -12,7 +12,7 @@
     {
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
         float2 uv = UnityStereoTransformScreenSpaceTex(input.texcoord);
-        uint2 positionSS = uv * _ScreenParams.xy;
+        uint2 positionSS = uv * _ScreenSize.xy;
         float3 mainColor = LOAD_TEXTURE2D_X(_MainTex, positionSS).rgb;
         float3 secondaryColor = LOAD_TEXTURE2D_X(_SecondaryTex, positionSS).rgb;
         // blend the main and secondary color

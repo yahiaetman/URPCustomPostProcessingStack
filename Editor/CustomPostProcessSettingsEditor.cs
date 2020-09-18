@@ -15,7 +15,7 @@ namespace UnityEditor.Rendering.Universal.PostProcessing {
         /// <summary>
         /// This will contain a list of all available renderers for each injection point.
         /// </summary>
-        private Dictionary<CustomPostProcessInjectPoint, List<Type>> _availableRenderers;
+        private Dictionary<CustomPostProcessInjectionPoint, List<Type>> _availableRenderers;
 
         /// <summary>
         /// Contains 3 Reorderable list for each settings property.
@@ -42,7 +42,7 @@ namespace UnityEditor.Rendering.Universal.PostProcessing {
         /// <summary>
         /// Intialize a reoderable list
         /// </summary>
-        void InitList(ref ReorderableList reorderableList, List<string> elements, string headerName, CustomPostProcessInjectPoint injectPoint, CustomPostProcess feature){
+        void InitList(ref ReorderableList reorderableList, List<string> elements, string headerName, CustomPostProcessInjectionPoint injectionPoint, CustomPostProcess feature){
             reorderableList = new ReorderableList(elements, typeof(string), true, true, true, true);
 
             reorderableList.drawHeaderCallback = (rect) => EditorGUI.LabelField(rect, headerName, EditorStyles.boldLabel);
@@ -58,7 +58,7 @@ namespace UnityEditor.Rendering.Universal.PostProcessing {
             {
                 var menu = new GenericMenu();
 
-                foreach (var type in _availableRenderers[injectPoint])
+                foreach (var type in _availableRenderers[injectionPoint])
                 {
                     if (!elements.Contains(type.AssemblyQualifiedName))
                         menu.AddItem(new GUIContent(GetName(type)), false, () => {
@@ -97,9 +97,9 @@ namespace UnityEditor.Rendering.Universal.PostProcessing {
             if(!propertyStates.ContainsKey(path)){
                 var state = new DrawerState();
                 var feature = property.serializedObject.targetObject as CustomPostProcess;
-                InitList(ref state.listAfterOpaqueAndSky, feature.settings.renderersAfterOpaqueAndSky, "After Opaque and Sky", CustomPostProcessInjectPoint.AfterOpaqueAndSky, feature);
-                InitList(ref state.listBeforePostProcess, feature.settings.renderersBeforePostProcess, "Before Post Process", CustomPostProcessInjectPoint.BeforePostProcess, feature);
-                InitList(ref state.listAfterPostProcess, feature.settings.renderersAfterPostProcess, "After Post Process", CustomPostProcessInjectPoint.AfterPostProcess, feature);
+                InitList(ref state.listAfterOpaqueAndSky, feature.settings.renderersAfterOpaqueAndSky, "After Opaque and Sky", CustomPostProcessInjectionPoint.AfterOpaqueAndSky, feature);
+                InitList(ref state.listBeforePostProcess, feature.settings.renderersBeforePostProcess, "Before Post Process", CustomPostProcessInjectionPoint.BeforePostProcess, feature);
+                InitList(ref state.listAfterPostProcess, feature.settings.renderersAfterPostProcess, "After Post Process", CustomPostProcessInjectionPoint.AfterPostProcess, feature);
                 propertyStates.Add(path, state);
             }
             
@@ -141,17 +141,22 @@ namespace UnityEditor.Rendering.Universal.PostProcessing {
         /// </summary>
         private void populateRenderers(){
             if(_availableRenderers != null) return;
-            _availableRenderers = new Dictionary<CustomPostProcessInjectPoint, List<Type>>(){
-                { CustomPostProcessInjectPoint.AfterOpaqueAndSky, new List<Type>() },
-                { CustomPostProcessInjectPoint.BeforePostProcess, new List<Type>() },
-                { CustomPostProcessInjectPoint.AfterPostProcess , new List<Type>() }
+            _availableRenderers = new Dictionary<CustomPostProcessInjectionPoint, List<Type>>(){
+                { CustomPostProcessInjectionPoint.AfterOpaqueAndSky, new List<Type>() },
+                { CustomPostProcessInjectionPoint.BeforePostProcess, new List<Type>() },
+                { CustomPostProcessInjectionPoint.AfterPostProcess , new List<Type>() }
             };
             foreach(var type in TypeCache.GetTypesDerivedFrom<CustomPostProcessRenderer>()){
                 if(type.IsAbstract) continue;
                 var attributes = type.GetCustomAttributes(typeof(CustomPostProcessAttribute), false);
                 if(attributes.Length != 1) continue;
                 CustomPostProcessAttribute attribute = attributes[0] as CustomPostProcessAttribute;
-                _availableRenderers[attribute.InjectPoint].Add(type);
+                if(attribute.InjectionPoint.HasFlag(CustomPostProcessInjectionPoint.AfterOpaqueAndSky))
+                    _availableRenderers[CustomPostProcessInjectionPoint.AfterOpaqueAndSky].Add(type);
+                if(attribute.InjectionPoint.HasFlag(CustomPostProcessInjectionPoint.BeforePostProcess))
+                    _availableRenderers[CustomPostProcessInjectionPoint.BeforePostProcess].Add(type);
+                if(attribute.InjectionPoint.HasFlag(CustomPostProcessInjectionPoint.AfterPostProcess))
+                    _availableRenderers[CustomPostProcessInjectionPoint.AfterPostProcess].Add(type);
             }
         }
 

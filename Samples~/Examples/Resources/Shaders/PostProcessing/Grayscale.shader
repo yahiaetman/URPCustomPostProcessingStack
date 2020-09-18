@@ -14,7 +14,7 @@
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
         float2 uv = UnityStereoTransformScreenSpaceTex(input.texcoord);
-        float4 color = LOAD_TEXTURE2D_X(_MainTex, uv * _ScreenParams.xy);
+        float4 color = LOAD_TEXTURE2D_X(_MainTex, uv * _ScreenSize.xy);
         
         // Blend between the original and the grayscale color
         color.rgb = lerp(color.rgb, Luminance(color.rgb).xxx, _Blend);

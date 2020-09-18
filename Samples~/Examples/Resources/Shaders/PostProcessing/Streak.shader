@@ -25,7 +25,7 @@ Shader "Hidden/Yetman/PostProcess/Streak"
     {
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-        uint2 ss = input.texcoord * _ScreenParams.xy - float2(0, 0.5);
+        uint2 ss = input.texcoord * _ScreenSize.xy - float2(0, 0.5);
         float3 c0 = LOAD_TEXTURE2D_X(_SourceTexture, ss).rgb;
         float3 c1 = LOAD_TEXTURE2D_X(_SourceTexture, ss + uint2(0, 1)).rgb;
         float3 c = (c0 + c1) / 2;
@@ -87,7 +87,7 @@ Shader "Hidden/Yetman/PostProcess/Streak"
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
         float2 uv = input.texcoord;
-        uint2 positionSS = uv * _ScreenParams.xy;
+        uint2 positionSS = uv * _ScreenSize.xy;
         const float dx = _InputTexture_TexelSize.x * 1.5;
 
         float u0 = uv.x - dx;
