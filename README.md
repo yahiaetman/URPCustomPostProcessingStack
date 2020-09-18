@@ -27,10 +27,10 @@ Other custom effects in samples but not used in screenshots:
 * Grayscale.
 * Invert.
 
-## System Requirements
+## Compatibility
 
-* Unity 2020.1+
-* URP 8.2.0+
+* Unity 2020.1
+* URP 8.2.0
 
 ## Features
 
@@ -243,7 +243,7 @@ I apologize in advance if I couldn't reply in a timely manner but I will do my b
 
 ## Contact
 
-If you would to contact me, DM me on Twitter: [@yetmania](https://twitter.com/yetmania)
+If you would like to contact me, DM me on Twitter: [@yetmania](https://twitter.com/yetmania)
 
 ## License
  [MIT License](LICENSE.md)
