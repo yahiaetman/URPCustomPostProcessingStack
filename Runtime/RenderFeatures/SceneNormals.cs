@@ -98,7 +98,7 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
         {
             RenderTextureDescriptor descriptor = cameraTextureDescriptor;
-            descriptor.depthBufferBits = 16;
+            descriptor.depthBufferBits = 32;
             descriptor.colorFormat = RenderTextureFormat.RGHalf;
             descriptor.msaaSamples = 1;
 
