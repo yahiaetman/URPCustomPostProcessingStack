@@ -49,6 +49,12 @@ Other custom effects in samples but not used in screenshots:
 * It failed with **Single-Pass Instanced** on **Mock HMD Loader**.
 * The `SceneNormals` renderer feature uses the override material in the drawing settings so it doesn't copy the original materials' parameters (e.g. normal maps and alpha clipping) and doesn't respect custom vertex shaders. This should be solved in URP 10.0 with the release of the `DepthNormalsPass` made for the SSAO feature.
 
+## Features I hope to implement
+
+- [ ] Global settings for `CustomPostProcessRenderer` to be set from the renderer feature instead of the volume component.
+- [ ] A Volumetric Light Effect as a sample.
+- [ ] The ability to add the same renderer multiple times under the same injection point (not sure yet if it is a good idea).
+
 ## How To Install
 
 Follow the instructions from the Unity manual on [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html) and insert the url:
@@ -231,6 +237,7 @@ We didn't explain some stuff here but you can see more in the samples:
 * Create temporary render targets inside the renderer (see [StreakEffect.cs](Samples~/Examples/Scripts/PostProcessing/StreakEffect.cs)).
 * Create persistent render targets inside the renderer (see [AfterImageEffect.cs](Samples~/Examples/Scripts/PostProcessing/AfterImageEffect.cs)).
 * Use a shader graph `Unlit shader` to create a post processing effect (see [GlitchEffect.cs](Samples~/Examples/Scripts/PostProcessing/GlitchEffect.cs)).
+* Use a renderer at multiple injection points (see [GradientFogEffect.cs](Samples~/Examples/Scripts/PostProcessing/GradientFogEffect.cs) and [GradientFog.shader](Samples~/Examples/Resources/Shaders/PostProcessing/GradientFog.shader)). 
 
 ## Issues & Pull Requests
 

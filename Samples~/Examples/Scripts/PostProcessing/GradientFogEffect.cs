@@ -29,7 +29,8 @@ namespace Yetman.PostProcess {
     }
 
     // Define the renderer for the custom post processing effect
-    [CustomPostProcess("Gradient Fog", CustomPostProcessInjectionPoint.AfterOpaqueAndSky)]
+    // This effect can be used after the opaque/sky pass or after the transparent pass
+    [CustomPostProcess("Gradient Fog", CustomPostProcessInjectionPoint.AfterOpaqueAndSky | CustomPostProcessInjectionPoint.BeforePostProcess)]
     public class GradientFogEffectRenderer : CustomPostProcessRenderer
     {
         // A variable to hold a reference to the corresponding volume component (you can define as many as you like)
@@ -79,6 +80,12 @@ namespace Yetman.PostProcess {
                 m_Material.SetVector(ShaderIDs.ColorRange, new Vector2(m_VolumeComponent.nearColorDistance.value, m_VolumeComponent.farColorDistance.value));
                 m_Material.SetColor(ShaderIDs.NearFogColor, m_VolumeComponent.nearFogColor.value);
                 m_Material.SetColor(ShaderIDs.FarFogColor, m_VolumeComponent.farFogColor.value);
+                // Checks whether the renderer is called before transparent or not to pick the proper shader features
+                if(injectionPoint == CustomPostProcessInjectionPoint.AfterOpaqueAndSky){
+                    m_Material.DisableKeyword("AFTER_TRANSPARENT_ON");
+                } else {
+                    m_Material.EnableKeyword("AFTER_TRANSPARENT_ON");
+                }
             }
             // set source texture
             cmd.SetGlobalTexture(ShaderIDs.Input, source);

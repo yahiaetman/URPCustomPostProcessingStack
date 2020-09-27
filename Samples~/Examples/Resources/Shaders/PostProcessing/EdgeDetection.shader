@@ -83,7 +83,7 @@
         // Normal similarity is calculated using a dot product
         float normalSame = smoothstep(_Threshold.x, _Threshold.y, dot(center.xyz, neighborhood.xyz));
         // Depth similarity is calculated using absolute difference
-        float depthSame = smoothstep(_Threshold.w, _Threshold.z, abs(center.w - neighborhood.w));
+        float depthSame = smoothstep(_Threshold.w * center.w, _Threshold.z * center.w, abs(center.w - neighborhood.w));
         // Combine normal and depth sameness to get edge factor
         float edge = 1 - normalSame * depthSame;
 

@@ -17,7 +17,7 @@ namespace Yetman.PostProcess {
         public ColorParameter blend = new ColorParameter(Color.black, false, false, true);
 
         [Tooltip("A scale for the time to convergence.")]
-        public MinFloatParameter timeScale = new MinFloatParameter(1, 0);
+        public MinFloatParameter timeScale = new MinFloatParameter(0, 0);
     }
 
     // Define the renderer for the custom post processing effect
@@ -80,8 +80,8 @@ namespace Yetman.PostProcess {
             var stack = VolumeManager.instance.stack;
             // Get the corresponding volume component
             m_VolumeComponent = stack.GetComponent<AfterImageEffect>();
-            // if blend value > 0, then we need to render this effect. 
-            bool requireRendering = m_VolumeComponent.blend.value != Color.black;
+            // if blend value and time scale > 0, then we need to render this effect. 
+            bool requireRendering = m_VolumeComponent.blend.value != Color.black && m_VolumeComponent.timeScale.value > 0;
             // if we don't need to execute this frame, we need to make sure that the history is invalidated
             // this solves an artifact where a very old history is used due to the effect being disabled for many frames   
             if(!requireRendering){
@@ -131,7 +131,7 @@ namespace Yetman.PostProcess {
             // set material properties
             if(m_Material != null){
                 Color blend = m_VolumeComponent.blend.value;
-                float power = Time.deltaTime / m_VolumeComponent.timeScale.value;
+                float power = Time.deltaTime / Mathf.Max(Mathf.Epsilon, m_VolumeComponent.timeScale.value);
                 // The amound of blending should depend on the delta time to make fading time frame-rate independent. 
                 blend.r = Mathf.Pow(blend.r, power);
                 blend.g = Mathf.Pow(blend.g, power);

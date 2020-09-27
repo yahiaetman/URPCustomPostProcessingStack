@@ -3,6 +3,10 @@
     HLSLINCLUDE
     #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+    
+    #if AFTER_TRANSPARENT_ON
+    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/DeclareTransparentDepthTexture.hlsl"
+    #endif
 
     TEXTURE2D_X(_MainTex);
 
@@ -32,6 +36,20 @@
         uint2 positionSS = uv * _ScreenSize.xy;
 
         float depth = LoadSceneDepth(positionSS);
+
+        #if AFTER_TRANSPARENT_ON
+        // If the fog is applied after the transparent pass,
+        // the depth is sampled from both the opaque and transparent depth textures
+        // and the nearest depth is selected.
+        // TODO: This can be optimized to read from one texture if the scene transparent depth includes the opaque depth 
+        float transparentDepth = LoadSceneTransparentDepth(positionSS);
+            #if UNITY_REVERSED_Z
+                depth = max(depth, transparentDepth);
+            #else
+                depth = min(depth, transparentDepth);
+            #endif
+        #endif
+
         float deviceDepth = ConvertZBufferToDeviceDepth(depth);
         float3 viewPos = ComputeViewSpacePosition(uv, deviceDepth, unity_CameraInvProjection);
         float distance = length(viewPos);
@@ -52,6 +70,8 @@
         Pass
         {
             HLSLPROGRAM
+            #pragma multi_compile_local_fragment __ AFTER_TRANSPARENT_ON
+
             #pragma vertex FullScreenTrianglePostProcessVertexProgram
             #pragma fragment GradientFogFragmentProgram
             ENDHLSL

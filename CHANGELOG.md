@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Added a Scene Transparent Depth PrePass.
+
+### Changed
+- Gradient Fog can now be used before or after the transparent pass.
+
+### Fixed
+- Fixed after image popping on leaving the volume by changing the default time scale to 0.
+- Fixed scene shifting on the screen to the left with the Glitch effect.
+- Removed some visual artifacts from Edge Detection by making the depth threshold relative to the center pixel depth.
+
 ## [1.0.0] - 2020-09-17
 ### Added
 - Added the main functionality for custom post-processing as renderer future for URP.
