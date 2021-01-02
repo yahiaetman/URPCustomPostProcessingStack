@@ -56,7 +56,7 @@ Other custom effects in samples but not used in screenshots:
 ## How To Install
 
 Follow the instructions from the Unity manual on [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html) and insert the url:
-> https://github.com/yahiaetman/urp-custom-pps.git
+> https://github.com/yahiaetman/URPCustomPostProcessingStack.git#URP-10.2.2
 
 The package also contains 8 example effects included as a sample.
 
