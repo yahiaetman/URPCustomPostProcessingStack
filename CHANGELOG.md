@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Added a Scene Transparent Depth PrePass.
+- Added support for URP's ScriptableRenderPassInput to pick which scene textures are needed for each effect. 
 
 ### Changed
 - Gradient Fog can now be used before or after the transparent pass.
@@ -15,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed after image popping on leaving the volume by changing the default time scale to 0.
 - Fixed scene shifting on the screen to the left with the Glitch effect.
 - Removed some visual artifacts from Edge Detection by making the depth threshold relative to the center pixel depth.
+
+### Removed
+- Removed the scene normal texture renderer feature since it is no longer needed with URP 10.
 
 ## [1.0.0] - 2020-09-17
 ### Added

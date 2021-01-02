@@ -46,6 +46,9 @@ namespace Yetman.PostProcess {
         
         // By default, the effect is visible in the scene view, but we can change that here.
         public override bool visibleInSceneView => true;
+        
+        // We need Color, Depth and Normal textures to apply edge detection.
+        public override ScriptableRenderPassInput input => ScriptableRenderPassInput.Color | ScriptableRenderPassInput.Depth | ScriptableRenderPassInput.Normal;
 
         // Initialized is called only once before the first render call
         // so we use it to create our material
