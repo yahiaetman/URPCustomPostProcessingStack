@@ -32,6 +32,8 @@ Other custom effects in samples but not used in screenshots:
 * Unity 2020.1
 * URP 8.2.0
 
+**Note:** There is a branch with support for URP 10.2.2 which you can find [here](https://github.com/yahiaetman/URPCustomPostProcessingStack/tree/URP-10.2.2).
+
 ## Features
 
 * Conveniently add custom post processing effects à la [PPSv2](https://github.com/Unity-Technologies/PostProcessing) and [HDRP's Custom Post Process](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html).
@@ -58,7 +60,7 @@ Other custom effects in samples but not used in screenshots:
 ## How To Install
 
 Follow the instructions from the Unity manual on [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html) and insert the url:
-> https://github.com/yahiaetman/urp-custom-pps.git
+> https://github.com/yahiaetman/URPCustomPostProcessingStack.git
 
 The package also contains 8 example effects included as a sample.
 
