@@ -1,6 +1,6 @@
 {
   "name": "com.yetman.render-pipelines.universal.postprocess",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "Universal RP Post-Processing Stack",
   "description": "A post-processing stack for Universal RP",
   "unity": "2020.1",
