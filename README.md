@@ -56,11 +56,7 @@ Other custom effects in samples but not used in screenshots:
 ## How To Install
 
 Follow the instructions from the Unity manual on [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html) and insert the url:
-<<<<<<< HEAD
-> https://github.com/yahiaetman/URPCustomPostProcessingStack.git#v1.1.0
-=======
-> https://github.com/yahiaetman/URPCustomPostProcessingStack.git#URP-10.2.2
->>>>>>> origin/URP-10.2.2
+> https://github.com/yahiaetman/URPCustomPostProcessingStack.git
 
 The package also contains 8 example effects included as a sample.
 
@@ -104,6 +100,9 @@ public class GrayscaleEffectRenderer : CustomPostProcessRenderer
     
     // By default, the effect is visible in the scene view, but we can change that here.
     public override bool visibleInSceneView => true;
+
+    /// Specifies the input needed by this custom post process. Default is Color only.
+    public override ScriptableRenderPassInput input => ScriptableRenderPassInput.Color;
     
     // Initialized is called only once before the first render call
     // so we use it to create our material
