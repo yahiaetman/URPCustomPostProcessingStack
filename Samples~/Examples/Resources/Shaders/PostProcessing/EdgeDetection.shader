@@ -2,8 +2,7 @@
 {
     HLSLINCLUDE
     #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/Core.hlsl"
-    // In URP 10, this should be replaced by the same file from URP's ShaderLibrary
-    #include "Packages/com.yetman.render-pipelines.universal.postprocess/ShaderLibrary/DeclareNormalsTexture.hlsl"
+    #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareNormalsTexture.hlsl"
     #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
     TEXTURE2D_X(_MainTex);

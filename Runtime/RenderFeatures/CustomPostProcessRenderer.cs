@@ -29,6 +29,11 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
         public virtual bool visibleInSceneView => true;
 
         /// <summary>
+        /// Specifies the input needed by this custom post process. Default is Color only.
+        /// </summary>
+        public virtual ScriptableRenderPassInput input => ScriptableRenderPassInput.Color;
+
+        /// <summary>
         /// Whether the function initialize has already been called
         /// </summary>
         public bool Initialized => _initialized;

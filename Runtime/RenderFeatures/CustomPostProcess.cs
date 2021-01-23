@@ -267,17 +267,24 @@ namespace UnityEngine.Rendering.Universal.PostProcessing {
             // See if current camera is a scene view camera to skip renderers with "visibleInSceneView" = false.
             bool isSceneView = renderingData.cameraData.cameraType == CameraType.SceneView;
 
+            // Here, we will collect the inputs needed by all the custom post processing effects
+            ScriptableRenderPassInput passInput = ScriptableRenderPassInput.None;
+
             // Collect the active renderers
             m_ActivePostProcessRenderers.Clear();
             for(int index = 0; index < m_PostProcessRenderers.Count; index++){
                 var ppRenderer = m_PostProcessRenderers[index];
                 // Skips current renderer if "visibleInSceneView" = false and the current camera is a scene view camera. 
                 if(isSceneView && !ppRenderer.visibleInSceneView) continue;
-                // Setup the camera for the renderer and if it will render anything, add to active renderers
+                // Setup the camera for the renderer and if it will render anything, add to active renderers and get its required inputs
                 if(ppRenderer.Setup(ref renderingData, injectionPoint)){
                     m_ActivePostProcessRenderers.Add(index);
+                    passInput |= ppRenderer.input;
                 }
             }
+
+            // Configure the pass to tell the renderer what inputs we need
+            ConfigureInput(passInput);
 
             // return if no renderers are active
             return m_ActivePostProcessRenderers.Count != 0;

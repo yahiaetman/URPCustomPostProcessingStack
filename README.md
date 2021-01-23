@@ -29,8 +29,8 @@ Other custom effects in samples but not used in screenshots:
 
 ## Compatibility
 
-* Unity 2020.1
-* URP 8.2.0
+* Unity 2020.2
+* URP 10.2.2
 
 ## Features
 
@@ -38,7 +38,6 @@ Other custom effects in samples but not used in screenshots:
 * Reorder effects from the editor like HDRP's [Custom Post Process Orders Settings](https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@8.2/manual/Custom-Post-Process.html#effect-ordering).
 * Use legacy `Image Effect Shaders` and `Unlit Shader Graphs` if you wish. It worked out of the box; No work was done by me.
 * Use it with `Camera Stacking`.
-* Use the `SceneNormals` feature (adapted from [Outline Study](https://github.com/chrisloop/outlinestudy) by [Christopher Sims](https://github.com/chrisloop)) to grab the scene normals onto a texture.
 
 ### Features that are almost untested:
 * It should be compatible with **MultiPass XR** but it is tested with **Mock HMD Loader** only so I can't guarantee that it works on an actual headset.
@@ -47,7 +46,6 @@ Other custom effects in samples but not used in screenshots:
 ## Known Issues
 
 * It failed with **Single-Pass Instanced** on **Mock HMD Loader**.
-* The `SceneNormals` renderer feature uses the override material in the drawing settings so it doesn't copy the original materials' parameters (e.g. normal maps and alpha clipping) and doesn't respect custom vertex shaders. This should be solved in URP 10.0 with the release of the `DepthNormalsPass` made for the SSAO feature.
 
 ## Features I hope to implement
 
@@ -58,7 +56,11 @@ Other custom effects in samples but not used in screenshots:
 ## How To Install
 
 Follow the instructions from the Unity manual on [Installing from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html) and insert the url:
+<<<<<<< HEAD
 > https://github.com/yahiaetman/URPCustomPostProcessingStack.git#v1.1.0
+=======
+> https://github.com/yahiaetman/URPCustomPostProcessingStack.git#URP-10.2.2
+>>>>>>> origin/URP-10.2.2
 
 The package also contains 8 example effects included as a sample.
 
@@ -237,7 +239,8 @@ We didn't explain some stuff here but you can see more in the samples:
 * Create temporary render targets inside the renderer (see [StreakEffect.cs](Samples~/Examples/Scripts/PostProcessing/StreakEffect.cs)).
 * Create persistent render targets inside the renderer (see [AfterImageEffect.cs](Samples~/Examples/Scripts/PostProcessing/AfterImageEffect.cs)).
 * Use a shader graph `Unlit shader` to create a post processing effect (see [GlitchEffect.cs](Samples~/Examples/Scripts/PostProcessing/GlitchEffect.cs)).
-* Use a renderer at multiple injection points (see [GradientFogEffect.cs](Samples~/Examples/Scripts/PostProcessing/GradientFogEffect.cs) and [GradientFog.shader](Samples~/Examples/Resources/Shaders/PostProcessing/GradientFog.shader)). 
+* Use a renderer at multiple injection points (see [GradientFogEffect.cs](Samples~/Examples/Scripts/PostProcessing/GradientFogEffect.cs) and [GradientFog.shader](Samples~/Examples/Resources/Shaders/PostProcessing/GradientFog.shader)).
+* Requesting Depth and/or Normal Textures for a post processing effect (see [GradientFogEffect.cs](Samples~/Examples/Scripts/PostProcessing/GradientFogEffect.cs) and [EdgeDetectionEffect.cs](Samples~/Examples/Scripts/PostProcessing/EdgeDetectionEffect.cs))
 
 ## Issues & Pull Requests
 

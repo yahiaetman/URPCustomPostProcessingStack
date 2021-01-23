@@ -52,6 +52,9 @@ namespace Yetman.PostProcess {
         // By default, the effect is visible in the scene view, but we can change that here.
         public override bool visibleInSceneView => true;
 
+        // We need depth to compute the pixel distance from the camera which is required to calculate the fog
+        public override ScriptableRenderPassInput input => ScriptableRenderPassInput.Color | ScriptableRenderPassInput.Depth;
+
         // Initialized is called only once before the first render call
         // so we use it to create our material
         public override void Initialize()
